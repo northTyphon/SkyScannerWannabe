@@ -1,3 +1,4 @@
+#pragma once
 #include "api.h"
 #include <crow.h>
 #include <crow/http_response.h>
