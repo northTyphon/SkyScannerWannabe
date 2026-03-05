@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "./Button.jsx";
 
-export default function SearchFlightsForm() {
+export default function SearchFlightsForm({ onResults, onLoading, onError }) {
   const {
     register,
     handleSubmit,
@@ -10,7 +10,19 @@ export default function SearchFlightsForm() {
   } = useForm();
 
   async function onSubmit(data) {
-    console.log(data);
+    onLoading(true);
+    try {
+      const response = await fetch(
+        `http://localhost:18080/flights?from=${data.from}&to=${data.to}&departDate=${data.departure}&stops=${data.stops}&adults=${data.adults}&children=${data.children}`,
+      );
+      const flights = await response.json();
+      console.log(flights);
+      onResults(flights);
+    } catch (err) {
+      onError("Failed to fetch flights");
+    } finally {
+      onLoading(false);
+    }
   }
 
   return (
